@@ -16,6 +16,7 @@ routes.use('/authentications', authentications);
 routes.use('/journals', journals);
 routes.use('/notifications', notifications);
 routes.use('/predict', predicts);
+routes.use('/ai/predict', predicts);
 routes.use('/health', health);
 routes.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
