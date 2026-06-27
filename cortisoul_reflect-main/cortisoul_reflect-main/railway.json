@@ -4,8 +4,6 @@
     "builder": "DOCKERFILE"
   },
   "deploy": {
-    "preDeployCommand": ["pnpm migrate up"],
-    "startCommand": "pnpm start:prod",
     "healthcheckPath": "/health",
     "healthcheckTimeout": 120,
     "restartPolicyType": "ON_FAILURE",

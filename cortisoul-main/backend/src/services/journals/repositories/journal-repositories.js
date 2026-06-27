@@ -71,12 +71,27 @@ class JournalRepositories {
     return result.rows[0];
   }
 
-  async editJournalById({ id, title, content }) {
+  async editJournalById({
+    id,
+    title,
+    content,
+    stressScore = null,
+    emotion = null,
+    stressCategory = null,
+  }) {
     const updatedAt = new Date().toISOString();
 
     const query = {
-      text: 'UPDATE journals SET title = $1, content = $2, updated_at = $3 WHERE id = $4 RETURNING *',
-      values: [title, content, updatedAt, id],
+      text: `UPDATE journals
+             SET title = $1,
+                 content = $2,
+                 updated_at = $3,
+                 stress_score = $4,
+                 emotion = $5,
+                 stress_category = $6
+             WHERE id = $7
+             RETURNING *`,
+      values: [title, content, updatedAt, stressScore, emotion, stressCategory, id],
     };
 
     const result = await this._pool.query(query);

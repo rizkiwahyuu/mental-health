@@ -6,17 +6,19 @@ import AuthorizationError from '../../../exceptions/authorization-error.js';
 import { getWeekRange, WEEK_DAYS, formatToYmd } from '../../../utils/date.js';
 import { journalToModel } from '../../../utils/mapDBToModel.js';
 import { predictService } from '../../predicts/services/predict-services.js';
+import { localPredictService } from '../../predicts/services/local-predict-service.js';
+import reflectionRepositories from '../../reflections/repositories/reflection-repositories.js';
 
 export const createJournal = async (req, res, next) => {
   const { title, content } = req.validated;
   const { id: owner } = req.user;
 
-  const prediction = await predictService(content);
+  let prediction = await predictService(content);
   if (!prediction) {
-    return next(new InvariantError('Prediksi AI gagal'));
+    prediction = localPredictService(content);
   }
 
-  const stressScoreValue = parseFloat(prediction.stress_score.toFixed(3));
+  const stressScoreValue = parseFloat(Number(prediction.stress_score).toFixed(3));
 
   const journal = await journalRepositories.createJournal({
     title,
@@ -84,10 +86,20 @@ export const editJournalById = async (req, res, next) => {
     );
   }
 
+  let prediction = await predictService(content);
+  if (!prediction) {
+    prediction = localPredictService(content);
+  }
+
+  const stressScoreValue = parseFloat(Number(prediction.stress_score).toFixed(3));
+
   const journal = await journalRepositories.editJournalById({
     id,
     title,
     content,
+    stressScore: stressScoreValue,
+    emotion: prediction.prediksi_label,
+    stressCategory: prediction.kategori_stres,
   });
 
   if (!journal) {
@@ -96,8 +108,11 @@ export const editJournalById = async (req, res, next) => {
     );
   }
 
+  await reflectionRepositories.deleteReflectionByJournalId(id);
+
   return response(res, 200, 'Jurnal berhasil diperbarui', {
     journal: journalToModel(journal),
+    prediction,
   });
 };
 

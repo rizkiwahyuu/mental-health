@@ -10,6 +10,10 @@ import requestLogger from '../middlewares/request-logger.js';
 import { globalLimiter } from '../middlewares/rate-limit.js';
 
 const app = express();
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000')
+  .split(',')
+  .map((origin) => origin.trim().replace(/\/$/, ''))
+  .filter(Boolean);
 
 // network
 app.set('trust proxy', 1);
@@ -18,7 +22,15 @@ app.set('trust proxy', 1);
 app.use(express.json());
 app.use(globalLimiter);
 app.use(helmet());
-app.use(cors({ origin: process.env.CORS_ORIGIN }));
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ''))) {
+      return callback(null, true);
+    }
+
+    return callback(new Error('Origin tidak diizinkan oleh CORS'));
+  },
+}));
 
 // logging
 app.use(requestLogger);

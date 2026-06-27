@@ -247,9 +247,9 @@ export const reflectionsApi = {
 // ─── Predict API ───────────────────────────────────────────────────────────────
 
 export const predictApi = {
-  /** POST /ai/predict — Prediksi & teks refleksi (Cortisoul V2) */
+  /** POST /predict — Prediksi teks jurnal */
   predict: (text: string) =>
-    request<{ prediction: AiPrediction }>("/ai/predict", {
+    request<{ prediction: AiPrediction }>("/predict", {
       method: "POST",
       body: JSON.stringify({ text }),
     }),
@@ -324,6 +324,7 @@ export interface Journal {
   content: string;
   owner: string;
   stress_score?: number;
+  stress_category?: string;
   emotion?: string;
   /** Saran dari AI berdasarkan isi jurnal */
   suggestion?: string;

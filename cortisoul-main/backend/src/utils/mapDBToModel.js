@@ -6,6 +6,7 @@ export const journalToModel = ({
   created_at,
   updated_at,
   stress_score,
+  stress_category,
   emotion,
   owner,
 }) => {
@@ -15,7 +16,8 @@ export const journalToModel = ({
     content,
     created_at,
     updated_at,
-    stress_score: parseFloat(stress_score),
+    stress_score: stress_score === null ? null : parseFloat(stress_score),
+    stress_category,
     emotion,
     owner,
   };

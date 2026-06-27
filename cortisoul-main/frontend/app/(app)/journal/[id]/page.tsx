@@ -93,6 +93,8 @@ export default function JournalDetailPage() {
       } else {
         await loadJournal();
       }
+      setReflectionText(null);
+      setReflectionError("");
       setIsEditing(false);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Gagal menyimpan perubahan");
@@ -821,4 +823,3 @@ function getStressLabel(score?: number | null): string {
   if (score < 7) return "Sedang";
   return "Tinggi";
 }
-
