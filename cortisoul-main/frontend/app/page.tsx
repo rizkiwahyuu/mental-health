@@ -276,8 +276,13 @@ export default function AuthPage() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Masukkan username"
                 required
+                minLength={3}
+                maxLength={50}
                 autoComplete="username"
               />
+              <p style={{ color: "var(--text-muted)", fontSize: "11.5px", marginTop: "5px" }}>
+                Username harus terdiri dari 3–50 karakter.
+              </p>
             </div>
             <div>
               <label style={{ display: "block", fontSize: "13px", fontWeight: 500, color: "var(--text-secondary)", marginBottom: "6px" }}>
@@ -289,8 +294,12 @@ export default function AuthPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Masukkan password"
                 required
+                minLength={6}
                 autoComplete={mode === "login" ? "current-password" : "new-password"}
               />
+              <p style={{ color: "var(--text-muted)", fontSize: "11.5px", marginTop: "5px" }}>
+                Password harus terdiri dari minimal 6 karakter.
+              </p>
             </div>
 
             
@@ -304,10 +313,11 @@ export default function AuthPage() {
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Ulangi password"
-                    required
-                    autoComplete="new-password"
-                  />
+                      placeholder="Ulangi password"
+                      required
+                      minLength={6}
+                      autoComplete="new-password"
+                    />
                 </div>
               </>
             )}
