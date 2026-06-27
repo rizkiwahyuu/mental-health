@@ -82,7 +82,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // Token kedaluwarsa, coba lakukan refresh
             const refreshToken = localStorage.getItem("refreshToken");
             if (refreshToken) {
-              const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+              const apiBaseUrl = (
+                process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
+              ).replace(/\/+$/, "");
               const refreshRes = await fetch(`${apiBaseUrl}/authentications`, {
                 method: "PUT",
                 headers: { "Content-Type": "application/json" },
